@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <h2 class="text-primary mb-3">Gestión de Administración</h2>
+
+  <!-- Formulario -->
+  <form (ngSubmit)="guardarPersonal()" class="card p-3 bg-light mb-4 shadow-sm" style="max-width: 400px;">
+    <div class="mb-3">
+      <label class="form-label fw-bold">Nombre Completo:</label>
+      <input type="text" class="form-control" [(ngModel)]="nuevoPersonal.nombre" name="nombrePersonal" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-bold">Cargo / Rol:</label>
+      <input type="text" class="form-control" [(ngModel)]="nuevoPersonal.cargo" name="cargo" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Guardar Personal</button>
+  </form>
+
+  <!-- Tabla -->
+  <h3 class="h4 text-secondary mb-3">Listado de Personal</h3>
+  <div *ngIf="listaPersonal.length > 0; else sinPersonal" class="table-responsive">
+    <table class="table table-striped table-hover border">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Cargo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let personal of listaPersonal">
+          <td>{{ personal.nombre }}</td>
+          <td>{{ personal.cargo }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #sinPersonal>
+    <div class="alert alert-info">No hay personal registrado aún.</div>
+  </ng-template>
+</div>
