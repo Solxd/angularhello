@@ -1,33 +1,94 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Necesario para formularios sencillos
+
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+
+import { AlumnoService } from '../../service/alumno.service';
+
+import { ListadoAlumnosComponent } from '../listado-alumnos/listado-alumnos/listado-alumnos.component';
 
 @Component({
   selector: 'app-alumnos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ListadoAlumnosComponent
+  ],
   templateUrl: './alumnos.component.html',
   styleUrl: './alumnos.component.css'
 })
 export class AlumnosComponent {
-  // Objeto para capturar los datos del formulario
-  nuevoAlumno = {
-    nombre: '',
-    edad: null
-  };
 
-  // Lista para almacenar los registros
-  listaAlumnos: any[] = [];
+  alumnoForm: FormGroup;
 
-  // Función que se ejecuta al enviar el formulario
-  guardarAlumno() {
-    if (this.nuevoAlumno.nombre && this.nuevoAlumno.edad) {
-      // Agregamos una copia del objeto a la lista
-      this.listaAlumnos.push({ ...this.nuevoAlumno });
+  @ViewChild(ListadoAlumnosComponent)
+  listadoComponent!: ListadoAlumnosComponent;
 
-      // Limpiamos los campos del formulario
-      this.nuevoAlumno.nombre = '';
-      this.nuevoAlumno.edad = null;
+  constructor(
+    private fb: FormBuilder,
+    private alumnoService: AlumnoService
+  ) {
+
+    this.alumnoForm = this.fb.group({
+
+      nombre: ['', Validators.required],
+
+      apellido: ['', Validators.required],
+
+      dni: ['', Validators.required],
+
+      email: ['', [
+        Validators.required,
+        Validators.email
+      ]]
+
+    });
+
+  }
+
+  guardarAlumno(): void {
+
+    if (this.alumnoForm.invalid) {
+
+      this.alumnoForm.markAllAsTouched();
+
+      return;
     }
+
+    this.alumnoService
+      .agregarAlumno(this.alumnoForm.value)
+      .subscribe({
+
+        next: (res) => {
+
+          console.log(
+            'Alumno guardado con éxito:',
+            res
+          );
+
+          this.alumnoForm.reset();
+
+          if (this.listadoComponent) {
+            this.listadoComponent.cargarAlumnos();
+          }
+
+        },
+
+        error: (err) => {
+
+          console.error(
+            'Error al guardar alumno:',
+            err
+          );
+
+        }
+
+      });
   }
 }

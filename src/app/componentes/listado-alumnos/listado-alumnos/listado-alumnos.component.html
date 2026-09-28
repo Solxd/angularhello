@@ -1,0 +1,22 @@
+<h3 class="h4 text-secondary mb-3">Listado de Alumnos</h3>
+
+<div *ngIf="alumnos.length > 0; else sinDatos" class="table-responsive">
+  <table class="table table-striped table-hover border">
+    <thead class="table-dark">
+      <tr>
+        <th>Nombre</th>
+        <th>Edad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let alumno of alumnos">
+        <td>{{ alumno.nombre }}</td>
+        <td>{{ alumno.edad }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #sinDatos>
+  <div class="alert alert-info">No hay alumnos registrados aún.</div>
+</ng-template>

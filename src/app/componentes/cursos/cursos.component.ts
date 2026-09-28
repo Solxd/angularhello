@@ -10,18 +10,36 @@ interface Curso {
 @Component({
   selector: 'app-cursos',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './cursos.component.html',
   styleUrl: './cursos.component.css'
 })
 export class CursosComponent {
-  listaCursos: Curso[] = [];
-  nuevoCurso: Curso = { nombre: '', duracion: '' };
 
-  guardarCurso() {
-    if (this.nuevoCurso.nombre && this.nuevoCurso.duracion) {
-      this.listaCursos.push({ ...this.nuevoCurso });
-      this.nuevoCurso = { nombre: '', duracion: '' };
+  listaCursos: Curso[] = [];
+
+  nuevoCurso: Curso = {
+    nombre: '',
+    duracion: ''
+  };
+
+  guardarCurso(): void {
+
+    if (
+      this.nuevoCurso.nombre &&
+      this.nuevoCurso.duracion
+    ) {
+      this.listaCursos.push({
+        ...this.nuevoCurso
+      });
+
+      this.nuevoCurso = {
+        nombre: '',
+        duracion: ''
+      };
     }
   }
 }

@@ -10,18 +10,36 @@ interface Personal {
 @Component({
   selector: 'app-administracion',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './administracion.component.html',
   styleUrl: './administracion.component.css'
 })
 export class AdministracionComponent {
-  listaPersonal: Personal[] = [];
-  nuevoPersonal: Personal = { nombre: '', cargo: '' };
 
-  guardarPersonal() {
-    if (this.nuevoPersonal.nombre && this.nuevoPersonal.cargo) {
-      this.listaPersonal.push({ ...this.nuevoPersonal });
-      this.nuevoPersonal = { nombre: '', cargo: '' };
+  listaPersonal: Personal[] = [];
+
+  nuevoPersonal: Personal = {
+    nombre: '',
+    cargo: ''
+  };
+
+  guardarPersonal(): void {
+
+    if (
+      this.nuevoPersonal.nombre &&
+      this.nuevoPersonal.cargo
+    ) {
+      this.listaPersonal.push({
+        ...this.nuevoPersonal
+      });
+
+      this.nuevoPersonal = {
+        nombre: '',
+        cargo: ''
+      };
     }
   }
 }
