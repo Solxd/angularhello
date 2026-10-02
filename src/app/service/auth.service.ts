@@ -2,45 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  token: string;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-
-  private apiUrl = 'http://localhost:8017/api/auth';
-
+  private url = 'http://localhost:8081/api/auth';
   constructor(private http: HttpClient) {}
-
-  login(datos: LoginRequest): Observable<AuthResponse> {
-
-    return this.http.post<AuthResponse>(
-      `${this.apiUrl}/login`,
-      datos
-    ).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.token);
-      })
-    );
+  login(username: string, password: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.url}/login`, { username, password })
+      .pipe(tap(r => sessionStorage.setItem('token', r.token)));
   }
-
-  logout(): void {
-    localStorage.removeItem('token');
+  getToken(): string | null { return sessionStorage.getItem('token'); }
+  estaLogueado(): boolean {
+    const t = this.getToken();
+    return !!t && t !== 'undefined' && t !== 'null';
   }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
-  isLoggedIn(): boolean {
-    return this.getToken() !== null;
-  }
+  logout(): void { sessionStorage.removeItem('token'); }
 }
